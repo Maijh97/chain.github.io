@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="HyperLedger Fabric," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="crypto-config.yaml,configtx.yaml 网络配置文件 crypto-config.yaml为  12345678910111213141516171819202122232425262728293031323334353637OrdererOrgs:  - Name: Orderer    Domain: example.com    CA:        Country">
+<meta name="keywords" content="HyperLedger Fabric">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HyperLedger Fabric 单机 单节点部署 Yaml文件编写">
+<meta property="og:url" content="http://yoursite.com/2018/08/06/FabricYaml/index.html">
+<meta property="og:site_name" content="Create a beautiful world">
+<meta property="og:description" content="crypto-config.yaml,configtx.yaml 网络配置文件 crypto-config.yaml为  12345678910111213141516171819202122232425262728293031323334353637OrdererOrgs:  - Name: Orderer    Domain: example.com    CA:        Country">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-08-06T15:08:01.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="HyperLedger Fabric 单机 单节点部署 Yaml文件编写">
+<meta name="twitter:description" content="crypto-config.yaml,configtx.yaml 网络配置文件 crypto-config.yaml为  12345678910111213141516171819202122232425262728293031323334353637OrdererOrgs:  - Name: Orderer    Domain: example.com    CA:        Country">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/08/06/FabricYaml/"/>
+
+
+
+
+
+  <title>HyperLedger Fabric 单机 单节点部署 Yaml文件编写 | Create a beautiful world</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Create a beautiful world</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/06/FabricYaml/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mai.jh">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/IMG_1001.JPG">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Create a beautiful world">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">HyperLedger Fabric 单机 单节点部署 Yaml文件编写</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-06T23:00:49+08:00">
+                2018-08-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="crypto-config-yaml-configtx-yaml-网络配置文件"><a href="#crypto-config-yaml-configtx-yaml-网络配置文件" class="headerlink" title="crypto-config.yaml,configtx.yaml 网络配置文件"></a>crypto-config.yaml,configtx.yaml 网络配置文件</h2><ul>
+<li>crypto-config.yaml为</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">OrdererOrgs:</span></span><br><span class="line"></span><br><span class="line"><span class="attr">  - Name:</span> <span class="string">Orderer</span></span><br><span class="line"><span class="attr">    Domain:</span> <span class="string">example.com</span></span><br><span class="line"><span class="attr">    CA:</span></span><br><span class="line"><span class="attr">        Country:</span> <span class="string">US</span></span><br><span class="line"><span class="attr">        Province:</span> <span class="string">California</span></span><br><span class="line"><span class="attr">    Specs:</span></span><br><span class="line"><span class="attr">      - Hostname:</span> <span class="string">orderer</span></span><br><span class="line"></span><br><span class="line"><span class="attr">PeerOrgs:</span></span><br><span class="line"></span><br><span class="line"><span class="attr">  - Name:</span> <span class="string">Org1</span></span><br><span class="line"><span class="attr">    Domain:</span> <span class="string">org1.example.com</span></span><br><span class="line"><span class="attr">    EnableNodeOUs:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">    CA:</span></span><br><span class="line"><span class="attr">        Country:</span> <span class="string">US</span></span><br><span class="line"><span class="attr">        Province:</span> <span class="string">California</span></span><br><span class="line"><span class="attr">        Locality:</span> <span class="string">San</span> <span class="string">Francisco</span></span><br><span class="line"></span><br><span class="line"><span class="attr">    Template:</span></span><br><span class="line"><span class="attr">      Count:</span> <span class="number">2</span></span><br><span class="line"></span><br><span class="line"><span class="attr">    Users:</span></span><br><span class="line"><span class="attr">      Count:</span> <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="attr">  - Name:</span> <span class="string">Org2</span></span><br><span class="line"><span class="attr">    Domain:</span> <span class="string">org2.example.com</span></span><br><span class="line"><span class="attr">    EnableNodeOUs:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">    CA:</span></span><br><span class="line"><span class="attr">        Country:</span> <span class="string">US</span></span><br><span class="line"><span class="attr">        Province:</span> <span class="string">California</span></span><br><span class="line"><span class="attr">        Locality:</span> <span class="string">San</span> <span class="string">Francisco</span></span><br><span class="line"><span class="attr">    Template:</span></span><br><span class="line"><span class="attr">      Count:</span> <span class="number">2</span></span><br><span class="line"><span class="attr">    Users:</span></span><br><span class="line"><span class="attr">      Count:</span> <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>configtx.yaml 为</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Organizations:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="meta">&amp;OrdererOrg</span></span><br><span class="line"><span class="attr">        Name:</span> <span class="string">OrdererOrg</span></span><br><span class="line"><span class="attr">        ID:</span> <span class="string">OrdererMSP</span></span><br><span class="line"><span class="attr">        MSPDir:</span> <span class="string">crypto-config/ordererOrganizations/example.com/msp</span></span><br><span class="line"><span class="attr">        Policies:</span></span><br><span class="line"><span class="attr">            Readers:</span></span><br><span class="line"><span class="attr">                Type:</span> <span class="string">Signature</span></span><br><span class="line"><span class="attr">                Rule:</span> <span class="string">"OR('OrdererMSP.member')"</span></span><br><span class="line"><span class="attr">            Writers:</span></span><br><span class="line"><span class="attr">                Type:</span> <span class="string">Signature</span></span><br><span class="line"><span class="attr">                Rule:</span> <span class="string">"OR('OrdererMSP.member')"</span></span><br><span class="line"><span class="attr">            Admins:</span></span><br><span class="line"><span class="attr">                Type:</span> <span class="string">Signature</span></span><br><span class="line"><span class="attr">                Rule:</span> <span class="string">"OR('OrdererMSP.admin')"</span></span><br><span class="line"><span class="bullet">    -</span> <span class="meta">&amp;Org1</span></span><br><span class="line"><span class="attr">        Name:</span> <span class="string">Org1MSP</span></span><br><span class="line"><span class="attr">        ID:</span> <span class="string">Org1MSP</span></span><br><span class="line"><span class="attr">        MSPDir:</span> <span class="string">crypto-config/peerOrganizations/org1.example.com/msp</span></span><br><span class="line"><span class="attr">        Policies:</span></span><br><span class="line"><span class="attr">            Readers:</span></span><br><span class="line"><span class="attr">                Type:</span> <span class="string">Signature</span></span><br><span class="line"><span class="attr">                Rule:</span> <span class="string">"OR('Org1MSP.admin', 'Org1MSP.peer', 'Org1MSP.client')"</span></span><br><span class="line"><span class="attr">            Writers:</span></span><br><span class="line"><span class="attr">                Type:</span> <span class="string">Signature</span></span><br><span class="line"><span class="attr">                Rule:</span> <span class="string">"OR('Org1MSP.admin', 'Org1MSP.client')"</span></span><br><span class="line"><span class="attr">            Admins:</span></span><br><span class="line"><span class="attr">                Type:</span> <span class="string">Signature</span></span><br><span class="line"><span class="attr">                Rule:</span> <span class="string">"OR('Org1MSP.admin')"</span></span><br><span class="line"><span class="attr">        AnchorPeers:</span></span><br><span class="line"><span class="attr">            - Host:</span> <span class="string">peer0.org1.example.com</span></span><br><span class="line"><span class="attr">              Port:</span> <span class="number">7051</span></span><br><span class="line"><span class="bullet">    -</span> <span class="meta">&amp;Org2</span></span><br><span class="line"><span class="attr">        Name:</span> <span class="string">Org2MSP</span></span><br><span class="line"><span class="attr">        ID:</span> <span class="string">Org2MSP</span></span><br><span class="line"><span class="attr">        MSPDir:</span> <span class="string">crypto-config/peerOrganizations/org2.example.com/msp</span></span><br><span class="line"><span class="attr">        Policies:</span></span><br><span class="line"><span class="attr">            Readers:</span></span><br><span class="line"><span class="attr">                Type:</span> <span class="string">Signature</span></span><br><span class="line"><span class="attr">                Rule:</span> <span class="string">"OR('Org2MSP.admin', 'Org2MSP.peer', 'Org2MSP.client')"</span></span><br><span class="line"><span class="attr">            Writers:</span></span><br><span class="line"><span class="attr">                Type:</span> <span class="string">Signature</span></span><br><span class="line"><span class="attr">                Rule:</span> <span class="string">"OR('Org2MSP.admin', 'Org2MSP.client')"</span></span><br><span class="line"><span class="attr">            Admins:</span></span><br><span class="line"><span class="attr">                Type:</span> <span class="string">Signature</span></span><br><span class="line"><span class="attr">                Rule:</span> <span class="string">"OR('Org2MSP.admin')"</span></span><br><span class="line"><span class="attr">        AnchorPeers:</span></span><br><span class="line"><span class="attr">            - Host:</span> <span class="string">peer0.org2.example.com</span></span><br><span class="line"><span class="attr">              Port:</span> <span class="number">7051</span></span><br><span class="line"></span><br><span class="line"><span class="attr">Application:</span> <span class="meta">&amp;ApplicationDefaults</span></span><br><span class="line"><span class="attr">    Organizations:</span></span><br><span class="line"><span class="attr">    Policies:</span></span><br><span class="line"><span class="attr">        Readers:</span></span><br><span class="line"><span class="attr">            Type:</span> <span class="string">ImplicitMeta</span></span><br><span class="line"><span class="attr">            Rule:</span> <span class="string">"ANY Readers"</span></span><br><span class="line"><span class="attr">        Writers:</span></span><br><span class="line"><span class="attr">            Type:</span> <span class="string">ImplicitMeta</span></span><br><span class="line"><span class="attr">            Rule:</span> <span class="string">"ANY Writers"</span></span><br><span class="line"><span class="attr">        Admins:</span></span><br><span class="line"><span class="attr">            Type:</span> <span class="string">ImplicitMeta</span></span><br><span class="line"><span class="attr">            Rule:</span> <span class="string">"MAJORITY Admins"</span></span><br><span class="line"><span class="attr">    Capabilities:</span></span><br><span class="line">        <span class="string">&lt;&lt;:</span> <span class="meta">*ApplicationCapabilities</span></span><br><span class="line"><span class="attr">Orderer:</span> <span class="meta">&amp;OrdererDefaults</span></span><br><span class="line"><span class="attr">    OrdererType:</span> <span class="string">kafka</span></span><br><span class="line"><span class="attr">    Addresses:</span></span><br><span class="line"><span class="bullet">        -</span> <span class="string">orderer.example.com:7050</span></span><br><span class="line"><span class="attr">    BatchTimeout:</span> <span class="number">2</span><span class="string">s</span></span><br><span class="line"><span class="attr">    BatchSize:</span></span><br><span class="line"><span class="attr">        MaxMessageCount:</span> <span class="number">10</span></span><br><span class="line"><span class="attr">        AbsoluteMaxBytes:</span> <span class="number">98</span> <span class="string">MB</span></span><br><span class="line"><span class="attr">        PreferredMaxBytes:</span> <span class="number">512</span> <span class="string">KB</span></span><br><span class="line"><span class="attr">    Kafka:</span></span><br><span class="line"><span class="attr">        Brokers:</span></span><br><span class="line"><span class="bullet">            -</span> <span class="number">172.17</span><span class="number">.0</span><span class="number">.1</span><span class="string">:9092</span></span><br><span class="line"><span class="attr">    Organizations:</span></span><br><span class="line"><span class="attr">    Policies:</span></span><br><span class="line"><span class="attr">        Readers:</span></span><br><span class="line"><span class="attr">            Type:</span> <span class="string">ImplicitMeta</span></span><br><span class="line"><span class="attr">            Rule:</span> <span class="string">"ANY Readers"</span></span><br><span class="line"><span class="attr">        Writers:</span></span><br><span class="line"><span class="attr">            Type:</span> <span class="string">ImplicitMeta</span></span><br><span class="line"><span class="attr">            Rule:</span> <span class="string">"ANY Writers"</span></span><br><span class="line"><span class="attr">        Admins:</span></span><br><span class="line"><span class="attr">            Type:</span> <span class="string">ImplicitMeta</span></span><br><span class="line"><span class="attr">            Rule:</span> <span class="string">"MAJORITY Admins"</span></span><br><span class="line"></span><br><span class="line"><span class="attr">        BlockValidation:</span></span><br><span class="line"><span class="attr">            Type:</span> <span class="string">ImplicitMeta</span></span><br><span class="line"><span class="attr">            Rule:</span> <span class="string">"ANY Writers"</span></span><br><span class="line"><span class="attr">    Capabilities:</span></span><br><span class="line">        <span class="string">&lt;&lt;:</span> <span class="meta">*OrdererCapabilities</span></span><br><span class="line"><span class="attr">Channel:</span> <span class="meta">&amp;ChannelDefaults</span></span><br><span class="line"><span class="attr">    Policies:</span></span><br><span class="line"><span class="attr">        Readers:</span></span><br><span class="line"><span class="attr">            Type:</span> <span class="string">ImplicitMeta</span></span><br><span class="line"><span class="attr">            Rule:</span> <span class="string">"ANY Readers"</span></span><br><span class="line"><span class="attr">        Writers:</span></span><br><span class="line"><span class="attr">            Type:</span> <span class="string">ImplicitMeta</span></span><br><span class="line"><span class="attr">            Rule:</span> <span class="string">"ANY Writers"</span></span><br><span class="line"><span class="attr">        Admins:</span></span><br><span class="line"><span class="attr">            Type:</span> <span class="string">ImplicitMeta</span></span><br><span class="line"><span class="attr">            Rule:</span> <span class="string">"MAJORITY Admins"</span></span><br><span class="line"><span class="attr">    Capabilities:</span></span><br><span class="line">        <span class="string">&lt;&lt;:</span> <span class="meta">*ChannelCapabilities</span></span><br><span class="line"><span class="attr">Profiles:</span></span><br><span class="line"><span class="attr">    TwoOrgsOrdererGenesis:</span></span><br><span class="line">        <span class="string">&lt;&lt;:</span> <span class="meta">*ChannelDefaults</span></span><br><span class="line"><span class="attr">        Orderer:</span></span><br><span class="line">            <span class="string">&lt;&lt;:</span> <span class="meta">*OrdererDefaults</span></span><br><span class="line"><span class="attr">            Organizations:</span></span><br><span class="line"><span class="bullet">                -</span> <span class="meta">*OrdererOrg</span></span><br><span class="line"><span class="attr">        Consortiums:</span></span><br><span class="line"><span class="attr">            SampleConsortium:</span></span><br><span class="line"><span class="attr">                Organizations:</span></span><br><span class="line"><span class="bullet">                    -</span> <span class="meta">*Org1</span></span><br><span class="line"><span class="bullet">                    -</span> <span class="meta">*Org2</span></span><br><span class="line"><span class="attr">    TwoOrgsChannel:</span></span><br><span class="line"><span class="attr">        Consortium:</span> <span class="string">SampleConsortium</span></span><br><span class="line"><span class="attr">        Application:</span></span><br><span class="line">            <span class="string">&lt;&lt;:</span> <span class="meta">*ApplicationDefaults</span></span><br><span class="line"><span class="attr">            Organizations:</span></span><br><span class="line"><span class="bullet">                -</span> <span class="meta">*Org1</span></span><br><span class="line"><span class="bullet">                -</span> <span class="meta">*Org2</span></span><br></pre></td></tr></table></figure>
+<h2 id="Docker-Compose-启动文件"><a href="#Docker-Compose-启动文件" class="headerlink" title="Docker-Compose 启动文件"></a>Docker-Compose 启动文件</h2><ul>
+<li>docker-compose-base.yaml 为</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Copyright IBM Corp. All Rights Reserved.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># SPDX-License-Identifier: Apache-2.0</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"></span><br><span class="line"><span class="attr">version:</span> <span class="string">'2'</span></span><br><span class="line"></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line"><span class="attr">  zookeeper:</span></span><br><span class="line"><span class="attr">    image:</span> <span class="string">hyperledger/fabric-zookeeper</span></span><br><span class="line"><span class="attr">    restart:</span> <span class="string">always</span></span><br><span class="line"><span class="attr">    ports:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="number">2181</span><span class="string">:2181</span></span><br><span class="line"><span class="attr">  kafka:</span></span><br><span class="line"><span class="attr">    image:</span> <span class="string">hyperledger/fabric-kafka</span></span><br><span class="line"><span class="attr">    restart:</span> <span class="string">always</span></span><br><span class="line"><span class="attr">    environment:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">KAFKA_MESSAGE_MAX_BYTES=103809024</span> <span class="comment"># 99 * 1024 * 1024 B</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">KAFKA_REPLICA_FETCH_MAX_BYTES=103809024</span> <span class="comment"># 99 * 1024 * 1024 B</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">KAFKA_UNCLEAN_LEADER_ELECTION_ENABLE=false</span></span><br><span class="line"><span class="attr">    ports:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="number">9092</span><span class="string">:9092</span></span><br><span class="line"></span><br><span class="line">  <span class="string">orderer.example.com:</span></span><br><span class="line"><span class="attr">    container_name:</span> <span class="string">orderer.example.com</span></span><br><span class="line"><span class="attr">    image:</span> <span class="string">hyperledger/fabric-orderer</span></span><br><span class="line"><span class="attr">    environment:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">ORDERER_GENERAL_LOGLEVEL=debug</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">ORDERER_GENERAL_LISTENADDRESS=0.0.0.0</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">ORDERER_GENERAL_GENESISMETHOD=file</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">ORDERER_GENERAL_GENESISFILE=/var/hyperledger/orderer/orderer.genesis.block</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">ORDERER_GENERAL_LOCALMSPID=OrdererMSP</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/orderer/msp</span></span><br><span class="line">      <span class="comment"># enabled TLS</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">ORDERER_GENERAL_TLS_ENABLED=true</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">ORDERER_GENERAL_TLS_PRIVATEKEY=/var/hyperledger/orderer/tls/server.key</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">ORDERER_GENERAL_TLS_CERTIFICATE=/var/hyperledger/orderer/tls/server.crt</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">ORDERER_GENERAL_TLS_ROOTCAS=[/var/hyperledger/orderer/tls/ca.crt]</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">ORDERER_KAFKA_RETRY_SHORTINTERVAL=1s</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">ORDERER_KAFKA_RETRY_SHORTTOTAL=30s</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">ORDERER_KAFKA_VERBOSE=true</span></span><br><span class="line"><span class="attr">    working_dir:</span> <span class="string">/opt/gopath/src/github.com/hyperledger/fabric</span></span><br><span class="line"><span class="attr">    command:</span> <span class="string">orderer</span></span><br><span class="line"><span class="attr">    volumes:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">../channel-artifacts/genesis.block:/var/hyperledger/orderer/orderer.genesis.block</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">../crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/msp:/var/hyperledger/orderer/msp</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">../crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/:/var/hyperledger/orderer/tls</span></span><br><span class="line"><span class="attr">    ports:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="number">7050</span><span class="string">:7050</span></span><br><span class="line"></span><br><span class="line">  <span class="string">peer0.org1.example.com:</span></span><br><span class="line"><span class="attr">    container_name:</span> <span class="string">peer0.org1.example.com</span></span><br><span class="line"><span class="attr">    extends:</span></span><br><span class="line"><span class="attr">      file:</span> <span class="string">peer-base.yaml</span></span><br><span class="line"><span class="attr">      service:</span> <span class="string">peer-base</span></span><br><span class="line"><span class="attr">    environment:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">CORE_PEER_ID=peer0.org1.example.com</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">CORE_PEER_ADDRESS=peer0.org1.example.com:7051</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">CORE_PEER_CHAINCODEADDRESS=peer0.org1.example.com:7052</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:7052</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.org1.example.com:7051</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">CORE_PEER_LOCALMSPID=Org1MSP</span></span><br><span class="line"><span class="attr">    volumes:</span></span><br><span class="line"><span class="bullet">        -</span> <span class="string">/var/run/:/host/var/run/</span></span><br><span class="line"><span class="bullet">        -</span> <span class="string">../crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/msp:/etc/hyperledger/fabric/msp</span></span><br><span class="line"><span class="bullet">        -</span> <span class="string">../crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls:/etc/hyperledger/fabric/tls</span></span><br><span class="line"><span class="attr">    ports:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="number">7051</span><span class="string">:7051</span></span><br><span class="line"></span><br><span class="line">  <span class="string">peer0.org2.example.com:</span></span><br><span class="line"><span class="attr">    container_name:</span> <span class="string">peer0.org2.example.com</span></span><br><span class="line"><span class="attr">    extends:</span></span><br><span class="line"><span class="attr">      file:</span> <span class="string">peer-base.yaml</span></span><br><span class="line"><span class="attr">      service:</span> <span class="string">peer-base</span></span><br><span class="line"><span class="attr">    environment:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">CORE_PEER_ID=peer0.org2.example.com</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">CORE_PEER_ADDRESS=peer0.org2.example.com:7051</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">CORE_PEER_CHAINCODEADDRESS=peer0.org2.example.com:7052</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:7052</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.org2.example.com:7051</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">CORE_PEER_LOCALMSPID=Org2MSP</span></span><br><span class="line"><span class="attr">    volumes:</span></span><br><span class="line"><span class="bullet">        -</span> <span class="string">/var/run/:/host/var/run/</span></span><br><span class="line"><span class="bullet">        -</span> <span class="string">../crypto-config/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/msp:/etc/hyperledger/fabric/msp</span></span><br><span class="line"><span class="bullet">        -</span> <span class="string">../crypto-config/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls:/etc/hyperledger/fabric/tls</span></span><br><span class="line"><span class="attr">    ports:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="number">9051</span><span class="string">:7051</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>docker-compose-cli.yaml 为</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Copyright IBM Corp. All Rights Reserved.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># SPDX-License-Identifier: Apache-2.0</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"></span><br><span class="line"><span class="attr">version:</span> <span class="string">'2'</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line"><span class="attr">  zookeeper:</span></span><br><span class="line"><span class="attr">    container_name:</span> <span class="string">zookeeper</span></span><br><span class="line"><span class="attr">    extends:</span></span><br><span class="line"><span class="attr">      file:</span> <span class="string">base/docker-compose-base.yaml</span></span><br><span class="line"><span class="attr">      service:</span> <span class="string">zookeeper</span></span><br><span class="line"><span class="attr">    environment:</span></span><br><span class="line"><span class="bullet">       -</span> <span class="string">ZOO_MY_ID=1</span></span><br><span class="line"><span class="bullet">       -</span> <span class="string">ZOO_SERVERS=server.1=zookeeper:2888:3888</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="attr">  kafka:</span></span><br><span class="line"><span class="attr">    container_name:</span> <span class="string">kafka</span></span><br><span class="line"><span class="attr">    extends:</span></span><br><span class="line"><span class="attr">      file:</span> <span class="string">base/docker-compose-base.yaml</span></span><br><span class="line"><span class="attr">      service:</span> <span class="string">kafka</span></span><br><span class="line"><span class="attr">    environment:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">KAFKA_BROKER_ID=0</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181</span></span><br><span class="line"><span class="attr">    depends_on:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">zookeeper</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  <span class="string">orderer.example.com:</span></span><br><span class="line"><span class="attr">    extends:</span></span><br><span class="line"><span class="attr">      file:</span> <span class="string">base/docker-compose-base.yaml</span></span><br><span class="line"><span class="attr">      service:</span> <span class="string">orderer.example.com</span></span><br><span class="line"><span class="attr">    container_name:</span> <span class="string">orderer.example.com</span></span><br><span class="line"><span class="attr">    depends_on:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">zookeeper</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">kafka</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  <span class="string">peer0.org1.example.com:</span></span><br><span class="line"><span class="attr">    container_name:</span> <span class="string">peer0.org1.example.com</span></span><br><span class="line"><span class="attr">    extends:</span></span><br><span class="line"><span class="attr">      file:</span>  <span class="string">base/docker-compose-base.yaml</span></span><br><span class="line"><span class="attr">      service:</span> <span class="string">peer0.org1.example.com</span></span><br><span class="line"></span><br><span class="line">  <span class="string">peer0.org2.example.com:</span></span><br><span class="line"><span class="attr">    container_name:</span> <span class="string">peer0.org2.example.com</span></span><br><span class="line"><span class="attr">    extends:</span></span><br><span class="line"><span class="attr">      file:</span>  <span class="string">base/docker-compose-base.yaml</span></span><br><span class="line"><span class="attr">      service:</span> <span class="string">peer0.org2.example.com</span></span><br><span class="line"></span><br><span class="line"><span class="attr">  cli:</span></span><br><span class="line"><span class="attr">    container_name:</span> <span class="string">cli</span></span><br><span class="line"><span class="attr">    image:</span> <span class="string">hyperledger/fabric-tools</span></span><br><span class="line"><span class="attr">    tty:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">    environment:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">GOPATH=/opt/gopath</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">CORE_LOGGING_LEVEL=DEBUG</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">CORE_PEER_ID=cli</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">CORE_PEER_ADDRESS=peer0.org1.example.com:7051</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">CORE_PEER_LOCALMSPID=Org1MSP</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">CORE_PEER_LOCALMSPTYPE=bccsp</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">CORE_PEER_TLS_ENABLED=true</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">CORE_PEER_TLS_CERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/server.crt</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">CORE_PEER_TLS_KEY_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/server.key</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp</span></span><br><span class="line"><span class="attr">    working_dir:</span> <span class="string">/opt/gopath/src/github.com/hyperledger/fabric/peer</span></span><br><span class="line">   <span class="comment"># command: /bin/bash -c './scripts/script.sh $&#123;CHANNEL_NAME&#125;; sleep $TIMEOUT'</span></span><br><span class="line"><span class="attr">    volumes:</span></span><br><span class="line"><span class="bullet">        -</span> <span class="string">/var/run/:/host/var/run/</span></span><br><span class="line"><span class="bullet">        -</span> <span class="string">./chaincode/go/:/opt/gopath/src/github.com/hyperledger/fabric/aberic/chaincode/go</span></span><br><span class="line"><span class="bullet">        -</span> <span class="string">./crypto-config:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/</span></span><br><span class="line"><span class="bullet">        -</span> <span class="string">./scripts:/opt/gopath/src/github.com/hyperledger/fabric/peer/scripts/</span></span><br><span class="line"><span class="bullet">        -</span> <span class="string">./channel-artifacts:/opt/gopath/src/github.com/hyperledger/fabric/peer/channel-artifacts</span></span><br><span class="line"><span class="attr">    depends_on:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">orderer.example.com</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">peer0.org1.example.com</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">peer0.org2.example.com</span></span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/HyperLedger-Fabric/" rel="tag"># HyperLedger Fabric</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/08/06/HyperLedgerFabric/" rel="next" title="HyperLedger Fabric 单机 单节点部署">
+                <i class="fa fa-chevron-left"></i> HyperLedger Fabric 单机 单节点部署
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/IMG_1001.JPG"
+                alt="Mai.jh" />
+            
+              <p class="site-author-name" itemprop="name">Mai.jh</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/Maijh97" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:maijh97@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#crypto-config-yaml-configtx-yaml-网络配置文件"><span class="nav-number">1.</span> <span class="nav-text">crypto-config.yaml,configtx.yaml 网络配置文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker-Compose-启动文件"><span class="nav-number">2.</span> <span class="nav-text">Docker-Compose 启动文件</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mai.jh</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="HyperLedger Fabric," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="HyperLedger Fabric 单机部署 V1.2版本 区块链组件 order(1) peer(1) kafka(1) zookeeper(1) org(2) cli(1)  环境的准备 一台Linux服务器（阿里云，腾讯云都可以）内存最好2G以上  Fabric 的运行环境请参考: 出自CSDN：Aberic  拉取源码 Fabric 可以使用git 或者go的工具。Fabric 源码的存">
+<meta name="keywords" content="HyperLedger Fabric">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HyperLedger Fabric 单机 单节点部署">
+<meta property="og:url" content="http://yoursite.com/2018/08/06/HyperLedgerFabric/index.html">
+<meta property="og:site_name" content="Create a beautiful world">
+<meta property="og:description" content="HyperLedger Fabric 单机部署 V1.2版本 区块链组件 order(1) peer(1) kafka(1) zookeeper(1) org(2) cli(1)  环境的准备 一台Linux服务器（阿里云，腾讯云都可以）内存最好2G以上  Fabric 的运行环境请参考: 出自CSDN：Aberic  拉取源码 Fabric 可以使用git 或者go的工具。Fabric 源码的存">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-08-06T15:17:33.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="HyperLedger Fabric 单机 单节点部署">
+<meta name="twitter:description" content="HyperLedger Fabric 单机部署 V1.2版本 区块链组件 order(1) peer(1) kafka(1) zookeeper(1) org(2) cli(1)  环境的准备 一台Linux服务器（阿里云，腾讯云都可以）内存最好2G以上  Fabric 的运行环境请参考: 出自CSDN：Aberic  拉取源码 Fabric 可以使用git 或者go的工具。Fabric 源码的存">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/08/06/HyperLedgerFabric/"/>
+
+
+
+
+
+  <title>HyperLedger Fabric 单机 单节点部署 | Create a beautiful world</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Create a beautiful world</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/06/HyperLedgerFabric/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Mai.jh">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/IMG_1001.JPG">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Create a beautiful world">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">HyperLedger Fabric 单机 单节点部署</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-06T22:51:49+08:00">
+                2018-08-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="HyperLedger-Fabric-单机部署-V1-2版本"><a href="#HyperLedger-Fabric-单机部署-V1-2版本" class="headerlink" title="HyperLedger Fabric 单机部署 V1.2版本"></a>HyperLedger Fabric 单机部署 V1.2版本</h1><ul>
+<li><p>区块链组件 <strong>order</strong>(1) <strong>peer</strong>(1) <strong>kafka</strong>(1) <strong>zookeeper</strong>(1) <strong>org</strong>(2) <strong>cli</strong>(1)</p>
+</li>
+<li><p>环境的准备 一台Linux服务器（阿里云，腾讯云都可以）内存最好2G以上</p>
+</li>
+<li><p><strong>Fabric</strong> 的运行环境请参考: <a href="http://www.cnblogs.com/aberic/p/7531202.html" target="_blank" rel="noopener">出自CSDN：Aberic</a></p>
+</li>
+<li>拉取源码 <a href="https://github.com/hyperledger" target="_blank" rel="noopener">Fabric</a> 可以使用git 或者go的工具。<strong>Fabric</strong> 源码的存放路径 为[<strong>*/github.com/hyperledger/fabric</strong>]<br>注意: 源码的路径一定是设置<strong>/etc/profile</strong> 环境变量进行指定（<strong>export GOPATH=/opt/gopath</strong>）</li>
+</ul>
+<h4 id="开始准备Fabric的容器镜像"><a href="#开始准备Fabric的容器镜像" class="headerlink" title="开始准备Fabric的容器镜像"></a>开始准备Fabric的容器镜像</h4><ul>
+<li><p>进入源码的目录<strong>/opt/gopath/src/github.com/hyperledger/fabric/examples/e2e_cli</strong><br>运行命令</p>
+  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">./network_setup.sh up</span><br><span class="line"><span class="meta">#</span><span class="bash"> 最要是通过启动1.2版本官方提供测试e2e</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 进行拉取镜像（新手建议直接运行e2e进行拉取镜像，保证容器的版本没有问题）</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 创建生成证书文件的二进制文件bin</span></span><br></pre></td></tr></table></figure>
+<p>  镜像拉取完之后开始搭建单机单节点的区块链网络<br>  首先进行源码的根目录，创建一个文件夹<strong>aberic</strong>（名字可以自己定）</p>
+</li>
+<li><p>然后拷贝e2e目录下的<strong>base</strong>目录和<strong>docker-compose-cli.yaml，configtx.yaml，crypto-config.yaml</strong> 至 <strong>aberic</strong>目录下</p>
+<p>把<strong>/opt/gopath/src/github.com/hyperledger/fabric/release/linux-amd64/</strong>下的<strong>bin</strong>目录一同拷贝到<strong>aberic</strong>目录下</p>
+<p>base目录下的文件和docker-compose-cli.yaml主要用于启动容器</p>
+<p>configtx.yaml，crypto-config.yaml主要是生成所需证书文件 <a href="http://www.cnblogs.com/aberic/p/7542835.html" target="_blank" rel="noopener">生成证书文件说明</a></p>
+</li>
+<li><p>编写区块链网络配置文件</p>
+</li>
+</ul>
+<p><a href="configtx.yaml，crypto-config.yaml">http://localhost</a></p>
+<ul>
+<li><p>生成证书</p>
+  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./bin/cryptogen generate --config=./crypto-config.yaml</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>生成创世块</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./bin/configtxgen -profile TwoOrgsOrdererGenesis -outputBlock ./channel-artifacts/genesis.block</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>创建通道</p>
+  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./bin/configtxgen -profile TwoOrgsChannel -outputCreateChannelTx ./channel-artifacts/mychannel.tx -channelID mychannel</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="修改docker-compose-启动文件docker-compose-base-yaml-docker-compose-cli-yaml"><a href="#修改docker-compose-启动文件docker-compose-base-yaml-docker-compose-cli-yaml" class="headerlink" title="修改docker-compose 启动文件docker-compose-base.yaml,docker-compose-cli.yaml"></a>修改docker-compose 启动文件docker-compose-base.yaml,docker-compose-cli.yaml</h4><ul>
+<li>编写docker-compose配置文件</li>
+</ul>
+<p><a href="configtx.yaml，crypto-config.yaml">http://localhost</a></p>
+<ul>
+<li><p>最后使用运行命令启动docker-compose</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker-compose -f docker-compose-cli.yaml up -d</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="进入cli客户端进行channel操作"><a href="#进入cli客户端进行channel操作" class="headerlink" title="进入cli客户端进行channel操作"></a>进入cli客户端进行channel操作</h4><ul>
+<li><p>进入cli客户端</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker exec -it cli bash</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>创建一个channel<br><strong>注意：如果设置使用tls 需要指定tls证书的路径</strong></p>
+  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 没有设置tls 请忽略</span></span><br><span class="line">export ORDERER_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem</span><br></pre></td></tr></table></figure>
+  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 创建channel 设置使用tls</span></span><br><span class="line">peer channel create -o orderer.example.com:7050 -c mychannel -f ./channel-artifacts/mychannel.tx --tls --cafile $ORDERER_CA</span><br></pre></td></tr></table></figure>
+  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 创建channel 没有使用tls</span></span><br><span class="line">peer channel create -o orderer.example.com:7050 -c mychannel -f ./channel-artifacts/mychannel.tx</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>加入通道</p>
+  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">peer channel join -b mychannel.block</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安装链码</p>
+  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">peer chaincode install -n mycc -v 1.0 -p github.com/hyperledger/fabric/aberic/chaincode/go/example02/cmd</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>实例化链码</p>
+  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 使用tls</span></span><br><span class="line">peer chaincode instantiate -o orderer.example.com:7050 --tls --cafile $ORDERER_CA -C mychannel -n mycc -v 1.0 -c '&#123;"Args":["init","a","100","b","200"]&#125;' -P "AND ('Org1MSP.peer')"</span><br></pre></td></tr></table></figure>
+  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 没有使用tls</span></span><br><span class="line">peer chaincode instantiate -o orderer.example.com:7050 -C mychannel -n mycc -v 1.0 -c '&#123;"Args":["init","a","100","b","200"]&#125;' -P "AND ('Org1MSP.peer')"</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查询初始合约数据</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">peer chaincode query -C mychannel -n mycc -c '&#123;"Args":["query","a"]&#125;'</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>实现合约a给b转账</p>
+  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">peer chaincode invoke -o orderer.example.com:7050  --tls --cafile $ORDERER_CA -C mychannel -n mycc peer0.org1.example.com -c '&#123;"Args":["invoke","a","b","10"]&#125;'</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/HyperLedger-Fabric/" rel="tag"># HyperLedger Fabric</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/28/springMvc1/" rel="next" title="Spring mvc 拦截器获取Request Body">
+                <i class="fa fa-chevron-left"></i> Spring mvc 拦截器获取Request Body
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/08/06/FabricYaml/" rel="prev" title="HyperLedger Fabric 单机 单节点部署 Yaml文件编写">
+                HyperLedger Fabric 单机 单节点部署 Yaml文件编写 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/IMG_1001.JPG"
+                alt="Mai.jh" />
+            
+              <p class="site-author-name" itemprop="name">Mai.jh</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/Maijh97" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:maijh97@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#HyperLedger-Fabric-单机部署-V1-2版本"><span class="nav-number">1.</span> <span class="nav-text">HyperLedger Fabric 单机部署 V1.2版本</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#开始准备Fabric的容器镜像"><span class="nav-number">1.0.0.1.</span> <span class="nav-text">开始准备Fabric的容器镜像</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#修改docker-compose-启动文件docker-compose-base-yaml-docker-compose-cli-yaml"><span class="nav-number">1.0.0.2.</span> <span class="nav-text">修改docker-compose 启动文件docker-compose-base.yaml,docker-compose-cli.yaml</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#进入cli客户端进行channel操作"><span class="nav-number">1.0.0.3.</span> <span class="nav-text">进入cli客户端进行channel操作</span></a></li></ol></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mai.jh</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
