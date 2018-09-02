@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="Create a beautiful world">
 <meta property="og:description" content="CentOS 安装 RabbitMQ 使用yum命令安装需要安装第三方的源  12yum install epel-release# 安装第三方源  开始安装RabbitMQ 第一步需要安装erlang  erlang 是安装RabbitMQ的必须品 RabbitMQ是用Erlang实现的一个高并发高可靠AMQP消息队列服务器 Erlang 的介绍 Erlang是一门动态类型的函数式编程语言，它也">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-09-02T03:59:14.000Z">
+<meta property="og:updated_time" content="2018-09-02T04:55:57.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="CentOS 安装 RabbitMQ">
 <meta name="twitter:description" content="CentOS 安装 RabbitMQ 使用yum命令安装需要安装第三方的源  12yum install epel-release# 安装第三方源  开始安装RabbitMQ 第一步需要安装erlang  erlang 是安装RabbitMQ的必须品 RabbitMQ是用Erlang实现的一个高并发高可靠AMQP消息队列服务器 Erlang 的介绍 Erlang是一门动态类型的函数式编程语言，它也">
@@ -365,6 +365,7 @@
 <p><strong>Erlang</strong> 的介绍</p>
 <p>Erlang是一门动态类型的函数式编程语言，它也是一门解释型语言，由Erlang虚拟机解释执行。从语言模型上说，Erlang是基于Actor模型的实现。在Actor模型里面，万物皆Actor，每个Actor都封装着内部状态，Actor相互之间只能通过消息传递这一种方式来进行通信。对应到Erlang里，每个Actor对应着一个Erlang进程，进程之间通过消息传递进行通信。相比共享内存，进程间通过消息传递来通信带来的直接好处就是消除了直接的锁开销(不考虑Erlang虚拟机底层实现中的锁应用)，那么消息传递有没有开销？有，但是基本可以忽略，消息传递在单机上的本质就是内存复制，要知道DDR3 SDRAM的内存带宽约为16GB/s。</p>
 <p>详细介绍:<a href="http://ju.outofmemory.cn/entry/111451" target="_blank" rel="noopener">参考原文</a></p>
+<a id="more"></a>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 通过yum install Erlang</span><br><span class="line">yum install erlang</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 输入erlang -v 查看是否安装成功</span><br><span class="line">erlang -v</span><br></pre></td></tr></table></figure>
 <ul>
 <li>然后安装RabbitMQ</li>
